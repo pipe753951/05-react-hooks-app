@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Button } from "../shared/components/Button";
 
-type trafficLightColor = "red" | "yellow" | "green";
+type TrafficLightColor = "red" | "yellow" | "green" | "gray";
+// type TrafficLightColor = keyof typeof colorClasses;
 
-const colors = {
+const colorClasses: Record<TrafficLightColor, string> = {
   red: "bg-red-500",
   yellow: "bg-yellow-500",
   green: "bg-green-500",
@@ -11,9 +12,9 @@ const colors = {
 };
 
 export const TrafficLight = function () {
-  const [light, setLight] = useState<trafficLightColor>("red");
+  const [light, setLight] = useState<TrafficLightColor>("red");
 
-  const handleChangeColor = (newLight: trafficLightColor) => {
+  const handleChangeColor = (newLight: TrafficLightColor) => {
     setLight(newLight);
   };
 
@@ -22,14 +23,14 @@ export const TrafficLight = function () {
       <div className="flex items-center justify-center gap-8">
         <div className="flex flex-col items-center gap-8 p-5 bg-slate-950 rounded-4xl">
           <div
-            className={`w-32 h-32 ${light === "red" ? colors.red : colors.gray} rounded-full transition-colors duration-200 ease-in-out`}
+            className={`w-32 h-32 ${light === "red" ? colorClasses.red : colorClasses.gray} rounded-full transition-colors duration-200 ease-in-out`}
           ></div>
 
           <div
-            className={`w-32 h-32 ${light === "yellow" ? colors.yellow : colors.gray} rounded-full transition-colors duration-200 ease-in-out`}
+            className={`w-32 h-32 ${light === "yellow" ? colorClasses.yellow : colorClasses.gray} rounded-full transition-colors duration-200 ease-in-out`}
           ></div>
           <div
-            className={`w-32 h-32 ${light === "green" ? colors.green : colors.gray} rounded-full transition-colors duration-200 ease-in-out`}
+            className={`w-32 h-32 ${light === "green" ? colorClasses.green : colorClasses.gray} rounded-full transition-colors duration-200 ease-in-out`}
           ></div>
         </div>
         {/* Botones para cambiar el estado de la luz */}
