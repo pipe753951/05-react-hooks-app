@@ -1,4 +1,4 @@
-# #01. useEffect
+# #01. `useEffect`
 
 El hook `useEffect` es utilizado para disparar lo que se conoce cómo efectos secundarios. Para crear este hook, se le pasa cómo argumento un callback que se encarga de los efectos secundarios, y un arreglo de dependencias, que indican con qué valores o estados se va a disparar el efecto. Por ejemplo:
 
