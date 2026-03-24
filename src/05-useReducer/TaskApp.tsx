@@ -8,34 +8,55 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-interface Todo {
+interface ToDo {
   id: number;
   text: string;
   completed: boolean;
 }
 
 export const TasksApp = () => {
-  const [todos, setTodos] = useState<Todo[]>([]);
+  const [toDos, setToDos] = useState<ToDo[]>([]);
   const [inputValue, setInputValue] = useState("");
 
-  const addTodo = () => {
-    console.log("Agregar tarea", inputValue);
+  const addToDo = () => {
+    const newToDoText = inputValue.trim();
+    if (!newToDoText) return;
+
+    const newToDo: ToDo = {
+      id: Date.now(),
+      text: newToDoText,
+      completed: false,
+    };
+
+    // setToDos([newToDo, ...toDos]);
+    setToDos((previousToDos) => [newToDo, ...previousToDos]);
+    setInputValue(String);
   };
 
-  const toggleTodo = (id: number) => {
+  const toggleToDo = (id: number) => {
     console.log("Cambiar de true a false", id);
+    const updatedToDos = toDos.map((toDo) => {
+      if (toDo.id == id) {
+        const editedToDo = toDo;
+        editedToDo.completed = !toDo.completed;
+        return editedToDo;
+      }
+      return toDo;
+    });
+    setToDos(updatedToDos);
   };
 
-  const deleteTodo = (id: number) => {
-    console.log("Eliminar tarea", id);
+  const deleteToDo = (id: number) => {
+    const updatedToDos = toDos.filter((toDo) => toDo.id !== id);
+    setToDos(updatedToDos);
   };
 
   const handleKeyPress = (event: React.KeyboardEvent) => {
-    console.log("Presiono enter");
+    if (event.key === "Enter") addToDo();
   };
 
-  const completedCount = todos.filter((todo) => todo.completed).length;
-  const totalCount = todos.length;
+  const completedCount = toDos.filter((toDo) => toDo.completed).length;
+  const totalCount = toDos.length;
 
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-50 to-slate-100 p-10">
@@ -51,12 +72,12 @@ export const TasksApp = () => {
 
         <Card className="mb-6 shadow-lg border-0 bg-white/80 backdrop-blur-sm">
           <CardContent className="p-6">
-            <Label htmlFor="todo" className="mb-3">
+            <Label htmlFor="toDo" className="mb-3">
               Tarea
             </Label>
             <div className="flex gap-2">
               <Input
-                id="todo"
+                id="toDo"
                 placeholder="Añade una nueva tarea..."
                 value={inputValue}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
@@ -66,9 +87,9 @@ export const TasksApp = () => {
                 className="flex-1 h-10 border-slate-200 focus:border-slate-400 focus:ring-slate-400"
               />
               <Button
-                onClick={addTodo}
+                onClick={addToDo}
                 className="text-white h-10 px-5 bg-slate-800 cursor-pointer hover:bg-slate-700"
-                aria-label="Add todo"
+                aria-label="Add toDo"
               >
                 <Plus className="w-4 h-4" />
               </Button>
@@ -107,7 +128,7 @@ export const TasksApp = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {todos.length === 0 ? (
+            {toDos.length === 0 ? (
               <div className="text-center py-12">
                 <div className="w-16 h-16 mx-auto mb-4 bg-slate-200 rounded-full flex items-center justify-center">
                   <Check className="w-8 h-8 text-slate-600" />
@@ -121,33 +142,33 @@ export const TasksApp = () => {
               </div>
             ) : (
               <div className="space-y-2">
-                {todos.map((todo) => (
+                {toDos.map((toDo) => (
                   <div
-                    key={todo.id}
+                    key={toDo.id}
                     className={`flex items-center gap-3 p-3 rounded-lg border transition-all duration-200 ${
-                      todo.completed
+                      toDo.completed
                         ? "bg-slate-50 border-slate-200"
                         : "bg-white border-slate-200 hover:border-slate-300 hover:shadow-sm"
                     }`}
                   >
                     <Checkbox
-                      checked={todo.completed}
-                      onCheckedChange={() => toggleTodo(todo.id)}
+                      checked={toDo.completed}
+                      onCheckedChange={() => toggleToDo(toDo.id)}
                       className="data-[state=checked]:bg-green-500 data-[state=checked]:border-green-500"
                     />
                     <span
                       className={`flex-1 transition-all duration-200 ${
-                        todo.completed
+                        toDo.completed
                           ? "text-slate-500 line-through"
                           : "text-slate-800"
                       }`}
                     >
-                      {todo.text}
+                      {toDo.text}
                     </span>
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => deleteTodo(todo.id)}
+                      onClick={() => deleteToDo(toDo.id)}
                       className="text-slate-400 hover:text-red-500 hover:bg-red-50 h-8 w-8 p-0"
                     >
                       <Trash2 className="w-4 h-4" />
