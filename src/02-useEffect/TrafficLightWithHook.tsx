@@ -1,21 +1,22 @@
 import { ProgressBar } from "../shared/components/ProgressBar";
-import { colorClasses, useTrafficLight } from "../hooks/useTrafficLight";
+import { useTrafficLight } from "../hooks/useTrafficLight";
 
 export const TrafficLightWithHook = function () {
-  const { light, countdown } = useTrafficLight();
+  const { countdown, redLightClass, yellowLightClass, greenLightClass } =
+    useTrafficLight();
 
   return (
     <div className="app-container">
       <div className="flex items-center justify-center gap-20">
         <div className="flex flex-col items-center gap-8 p-5 bg-slate-950 rounded-4xl">
           <div
-            className={`w-32 h-32 ${light === "red" ? colorClasses.red : "bg-gray-500"} rounded-full transition-colors duration-200 ease-in-out`}
+            className={`w-32 h-32 ${redLightClass} rounded-full transition-colors duration-200 ease-in-out`}
           ></div>
           <div
-            className={`w-32 h-32 ${light === "yellow" ? colorClasses.yellow : "bg-gray-500"} rounded-full transition-colors duration-200 ease-in-out`}
+            className={`w-32 h-32 ${yellowLightClass} rounded-full transition-colors duration-200 ease-in-out`}
           ></div>
           <div
-            className={`w-32 h-32 ${light === "green" ? colorClasses.green : "bg-gray-500"} rounded-full transition-colors duration-200 ease-in-out`}
+            className={`w-32 h-32 ${greenLightClass} rounded-full transition-colors duration-200 ease-in-out`}
           ></div>
         </div>
         <div className="max-w-100">

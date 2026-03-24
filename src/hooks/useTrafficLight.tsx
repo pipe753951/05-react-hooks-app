@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 type TrafficLightColor = "red" | "yellow" | "green";
 
-export const colorClasses: Record<TrafficLightColor, string> = {
+const colorClasses: Record<TrafficLightColor, string> = {
   red: "bg-red-500 animate-pulse",
   yellow: "bg-yellow-500 animate-pulse",
   green: "bg-green-500 animate-pulse",
@@ -34,7 +34,18 @@ export const useTrafficLight = () => {
   }, [countdown, light]);
 
   return {
-    light,
+    // Properties
     countdown,
+    light,
+    // colorClasses,
+
+    // Computed
+    // percentage: (countdown / 5) * 100
+    redLightClass: light === "red" ? colorClasses.red : "bg-gray-500",
+    yellowLightClass: light === "yellow" ? colorClasses.yellow : "bg-gray-500",
+    greenLightClass: light === "green" ? colorClasses.green : "bg-gray-500",
+
+    // Methods
+    // ...
   };
 };
