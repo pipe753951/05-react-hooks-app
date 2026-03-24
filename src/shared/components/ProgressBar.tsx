@@ -13,7 +13,7 @@ export const ProgressBar = function (props: Props) {
   return (
     <div
       className={className
-        ?.concat(" ", "w-64 h-2 bg-slate-900 rounded-full")
+        ?.concat(" ", "w-64 h-2 my-5 bg-slate-900 rounded-full")
         .trim()}
       role="progressbar"
       aria-label={label}
