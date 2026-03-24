@@ -3,9 +3,10 @@ import { useState } from "react";
 import { Plus, Trash2, Check } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 interface Todo {
   id: number;
@@ -37,32 +38,37 @@ export const TasksApp = () => {
   const totalCount = todos.length;
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-50 to-slate-100 p-4">
+    <div className="min-h-screen bg-linear-to-br from-slate-50 to-slate-100 p-10">
       <div className="mx-auto max-w-2xl">
         <div className="mb-8 text-center">
-          <h1 className="text-4xl font-bold text-slate-800 mb-2">
+          <h1 className="text-5xl font-bold text-slate-800 mb-2">
             Lista de Tareas
           </h1>
           <p className="text-slate-600">
-            Mantén tus tareas organizadas y consigue hacerlas
+            Diseñado para organizar y conseguir hacerlas.
           </p>
         </div>
 
         <Card className="mb-6 shadow-lg border-0 bg-white/80 backdrop-blur-sm">
           <CardContent className="p-6">
+            <Label htmlFor="todo" className="mb-3">
+              Tarea
+            </Label>
             <div className="flex gap-2">
               <Input
+                id="todo"
                 placeholder="Añade una nueva tarea..."
                 value={inputValue}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
                   setInputValue(event.target.value)
                 }
                 onKeyDown={handleKeyPress}
-                className="flex-1 border-slate-200 focus:border-slate-400 focus:ring-slate-400"
+                className="flex-1 h-10 border-slate-200 focus:border-slate-400 focus:ring-slate-400"
               />
               <Button
                 onClick={addTodo}
-                className="bg-slate-800 hover:bg-slate-700 text-white px-4"
+                className="text-white h-10 px-5 bg-slate-800 cursor-pointer hover:bg-slate-700"
+                aria-label="Add todo"
               >
                 <Plus className="w-4 h-4" />
               </Button>
@@ -97,18 +103,20 @@ export const TasksApp = () => {
         <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm">
           <CardHeader>
             <CardTitle className="text-lg font-semibold text-slate-700">
-              Tareas
+              Mis Tareas
             </CardTitle>
           </CardHeader>
           <CardContent>
             {todos.length === 0 ? (
               <div className="text-center py-12">
-                <div className="w-16 h-16 mx-auto mb-4 bg-slate-100 rounded-full flex items-center justify-center">
-                  <Check className="w-8 h-8 text-slate-400" />
+                <div className="w-16 h-16 mx-auto mb-4 bg-slate-200 rounded-full flex items-center justify-center">
+                  <Check className="w-8 h-8 text-slate-600" />
                 </div>
-                <p className="text-slate-500 text-lg mb-2">No hay tareas</p>
-                <p className="text-slate-400 text-sm">
-                  Añade una tarea arriba para empezar
+                <p className="text-slate-500 font-medium text-lg mb-2">
+                  Sin Tareas
+                </p>
+                <p className="text-slate-500 text-sm">
+                  Empieza añadiendo tu primera tarea.
                 </p>
               </div>
             ) : (
