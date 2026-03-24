@@ -7,7 +7,7 @@ interface ToDo {
 interface TaskState {
   toDos: ToDo[];
   toDosLength: number;
-  completedToDosQuantity: number;
+  doneToDosQuantity: number;
   pendingToDosQuantity: number;
 }
 
@@ -15,6 +15,14 @@ export type TaskAction =
   | { type: "ADD_TODO"; payload: string }
   | { type: "DELETE_TODO"; payload: number }
   | { type: "TOGGLE_TODO"; payload: number };
+
+const getPendingToDos = function (toDos: ToDo[]) {
+  return toDos.filter((toDo) => !toDo.completed);
+};
+
+const getDoneToDos = function (toDos: ToDo[]) {
+  return toDos.filter((toDo) => toDo.completed);
+};
 
 export const taskReducer = function (
   state: TaskState,
@@ -31,14 +39,28 @@ export const taskReducer = function (
         completed: false,
       };
 
-      return { ...state, toDos: [newToDo, ...state.toDos] };
-    }
+      const updatedToDos = [newToDo, ...state.toDos];
 
-    case "DELETE_TODO":
       return {
         ...state,
-        toDos: state.toDos.filter((toDo) => toDo.id !== action.payload),
+        toDosLength: updatedToDos.length,
+        toDos: updatedToDos,
+        pendingToDosQuantity: getPendingToDos(updatedToDos).length,
       };
+    }
+
+    case "DELETE_TODO": {
+      const updatedToDos = state.toDos.filter(
+        (toDo) => toDo.id !== action.payload,
+      );
+
+      return {
+        toDosLength: updatedToDos.length,
+        toDos: updatedToDos,
+        pendingToDosQuantity: getPendingToDos(updatedToDos).length,
+        doneToDosQuantity: getDoneToDos(updatedToDos).length,
+      };
+    }
 
     case "TOGGLE_TODO": {
       const updatedToDos = state.toDos.map((toDo) => {
@@ -50,7 +72,12 @@ export const taskReducer = function (
         return toDo;
       });
 
-      return { ...state, toDos: updatedToDos };
+      return {
+        ...state,
+        toDos: updatedToDos,
+        pendingToDosQuantity: getPendingToDos(updatedToDos).length,
+        doneToDosQuantity: getDoneToDos(updatedToDos).length,
+      };
     }
 
     default:
