@@ -12,6 +12,11 @@ interface TaskState {
 }
 
 export const getTasksInitialState = (): TaskState => {
+  const localStorageState = localStorage.getItem("tasks-state");
+
+  //! Cuidado, porque el objeto pudo haber sido manipulado.
+  if (localStorageState) return JSON.parse(localStorageState);
+
   return {
     toDos: [],
     toDosLength: 0,

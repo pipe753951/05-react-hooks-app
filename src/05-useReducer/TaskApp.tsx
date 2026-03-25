@@ -1,4 +1,4 @@
-import { useReducer, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 
 import { Plus, Trash2, Check } from "lucide-react";
 
@@ -14,6 +14,9 @@ export const TasksApp = () => {
   // const [toDos, setToDos] = useState<ToDo[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [state, dispatch] = useReducer(taskReducer, getTasksInitialState());
+  useEffect(() => {
+    localStorage.setItem("tasks-state", JSON.stringify(state));
+  }, [state]);
 
   const addToDo = () => {
     const newToDoText = inputValue.trim();
@@ -33,7 +36,7 @@ export const TasksApp = () => {
   };
 
   const toggleToDo = (id: number) => {
-    console.log("Cambiar de true a false", id);
+    // console.log("Cambiar de true a false", id);
     // const updatedToDos = toDos.map((toDo) => {
     //   if (toDo.id == id) {
     //     const editedToDo = toDo;
