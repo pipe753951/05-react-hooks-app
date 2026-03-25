@@ -16,18 +16,17 @@ export type TaskAction =
   | { type: "DELETE_TODO"; payload: number }
   | { type: "TOGGLE_TODO"; payload: number };
 
-const getPendingToDos = function (toDos: ToDo[]) {
-  return toDos.filter((toDo) => !toDo.completed);
-};
-
-const getDoneToDos = function (toDos: ToDo[]) {
-  return toDos.filter((toDo) => toDo.completed);
-};
-
 export const taskReducer = function (
   state: TaskState,
   action: TaskAction,
 ): TaskState {
+  const getDoneAndPendingToDosQuantity = (toDos: ToDo[]) => {
+    const doneTodos = toDos.filter((toDo) => toDo.completed).length;
+    const pendingTodos = toDos.length - doneTodos;
+
+    return [doneTodos, pendingTodos] as const;
+  };
+
   switch (action.type) {
     case "ADD_TODO": {
       const newToDoText = action.payload.trim();
@@ -45,7 +44,7 @@ export const taskReducer = function (
         ...state,
         toDosLength: updatedToDos.length,
         toDos: updatedToDos,
-        pendingToDosQuantity: getPendingToDos(updatedToDos).length,
+        pendingToDosQuantity: state.pendingToDosQuantity + 1,
       };
     }
 
@@ -54,11 +53,14 @@ export const taskReducer = function (
         (toDo) => toDo.id !== action.payload,
       );
 
+      const [doneToDos, pendingToDos] =
+        getDoneAndPendingToDosQuantity(updatedToDos);
+
       return {
         toDosLength: updatedToDos.length,
         toDos: updatedToDos,
-        pendingToDosQuantity: getPendingToDos(updatedToDos).length,
-        doneToDosQuantity: getDoneToDos(updatedToDos).length,
+        doneToDosQuantity: doneToDos,
+        pendingToDosQuantity: pendingToDos,
       };
     }
 
@@ -72,15 +74,15 @@ export const taskReducer = function (
         return toDo;
       });
 
+      const [doneToDos, pendingToDos] =
+        getDoneAndPendingToDosQuantity(updatedToDos);
+
       return {
         ...state,
         toDos: updatedToDos,
-        pendingToDosQuantity: getPendingToDos(updatedToDos).length,
-        doneToDosQuantity: getDoneToDos(updatedToDos).length,
+        doneToDosQuantity: doneToDos,
+        pendingToDosQuantity: pendingToDos,
       };
     }
-
-    default:
-      return state;
   }
 };
