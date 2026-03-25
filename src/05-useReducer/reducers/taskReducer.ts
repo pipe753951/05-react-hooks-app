@@ -1,3 +1,5 @@
+import * as zod from "zod";
+
 interface ToDo {
   id: number;
   text: string;
@@ -11,11 +13,34 @@ interface TaskState {
   pendingToDosQuantity: number;
 }
 
+const TodoSchema = zod.object({
+  id: zod.number(),
+  text: zod.string(),
+  completed: zod.boolean(),
+});
+
+const TaskStateSchema = zod.object({
+  toDos: zod.array(TodoSchema),
+  toDosLength: zod.number(),
+  doneToDosQuantity: zod.number(),
+  pendingToDosQuantity: zod.number(),
+});
+
 export const getTasksInitialState = (): TaskState => {
   const localStorageState = localStorage.getItem("tasks-state");
 
   //! Cuidado, porque el objeto pudo haber sido manipulado.
-  if (localStorageState) return JSON.parse(localStorageState);
+  if (localStorageState) {
+    // Validar mediante validador de objetos.
+    const result = TaskStateSchema.safeParse(JSON.parse(localStorageState));
+
+    // if (result.error) {
+    //   console.error(result.error);
+    // } else {
+    //   return JSON.parse(localStorageState);
+    // }
+    if (!result.error) return JSON.parse(localStorageState);
+  }
 
   return {
     toDos: [],
