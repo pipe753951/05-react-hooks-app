@@ -1,8 +1,11 @@
 import React, { useState } from "react";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { SkipForward, Play } from "lucide-react";
+
+import confetti from "canvas-confetti";
 
 const GAME_WORDS = [
   "EFÍMERA",
@@ -55,15 +58,17 @@ export const ScrambleWords = () => {
   const [isGameOver, setIsGameOver] = useState(false);
 
   const changeCurrentWordToNext = () => {
-    const newWordIndex = Math.round(Math.random() + 1 * (words.length - 2));
+    const changedWordList = words.filter((word) => word !== currentWord);
+    setWords(changedWordList);
 
-    setGuess("");
+    const newWordIndex = Math.round(
+      Math.random() * (changedWordList.length - 1),
+    );
+    const newWord = changedWordList[newWordIndex];
 
-    setWords(words.filter((word) => word !== currentWord));
-
-    const newWord = words[newWordIndex];
     setCurrentWord(newWord);
     setScrambledWord(scrambleWord(newWord));
+    setGuess("");
   };
 
   const handleGuessSubmit = (event: React.SubmitEvent) => {
@@ -87,6 +92,11 @@ export const ScrambleWords = () => {
     }
 
     setPoints((prevPoints) => prevPoints + 1);
+    confetti({
+      particleCount: 100,
+      spread: 120,
+      origin: { y: 0.6 },
+    });
 
     changeCurrentWordToNext();
   };
@@ -104,19 +114,13 @@ export const ScrambleWords = () => {
     setPoints(0);
     setErrorCounter(0);
     setSkipCounter(0);
-    if (words.length === 0) {
-      setWords(shuffleArray(GAME_WORDS));
 
-      const newWordIndex = Math.round(
-        Math.random() + 1 * (GAME_WORDS.length - 2),
-      );
-      const newWord = GAME_WORDS[newWordIndex];
-      setCurrentWord(newWord);
-      setScrambledWord(scrambleWord(newWord));
-      return;
-    } else {
-      changeCurrentWordToNext();
-    }
+    setWords(shuffleArray(GAME_WORDS));
+
+    const newWordIndex = Math.round(Math.random() * (GAME_WORDS.length - 1));
+    const newWord = GAME_WORDS[newWordIndex];
+    setCurrentWord(newWord);
+    setScrambledWord(scrambleWord(newWord));
   };
 
   //! Si ya no hay palabras para jugar, se muestra el mensaje de fin de juego
