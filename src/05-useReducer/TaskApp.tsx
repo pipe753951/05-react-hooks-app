@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useReducer, useState } from "react";
 
 import { Plus, Trash2, Check } from "lucide-react";
 
@@ -8,49 +8,53 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
+import { getTasksInitialState, taskReducer } from "./reducers/taskReducer";
+
 export const TasksApp = () => {
-  const [toDos, setToDos] = useState<ToDo[]>([]);
+  // const [toDos, setToDos] = useState<ToDo[]>([]);
   const [inputValue, setInputValue] = useState("");
+  const [state, dispatch] = useReducer(taskReducer, getTasksInitialState());
 
   const addToDo = () => {
     const newToDoText = inputValue.trim();
     if (!newToDoText) return;
 
-    const newToDo: ToDo = {
-      id: Date.now(),
-      text: newToDoText,
-      completed: false,
-    };
+    // const newToDo: ToDo = {
+    //   id: Date.now(),
+    //   text: newToDoText,
+    //   completed: false,
+    // };
 
     // setToDos([newToDo, ...toDos]);
-    setToDos((previousToDos) => [newToDo, ...previousToDos]);
+    // setToDos((previousToDos) => [newToDo, ...previousToDos]);
+
+    dispatch({ type: "ADD_TODO", payload: newToDoText });
     setInputValue(String);
   };
 
   const toggleToDo = (id: number) => {
     console.log("Cambiar de true a false", id);
-    const updatedToDos = toDos.map((toDo) => {
-      if (toDo.id == id) {
-        const editedToDo = toDo;
-        editedToDo.completed = !toDo.completed;
-        return editedToDo;
-      }
-      return toDo;
-    });
-    setToDos(updatedToDos);
+    // const updatedToDos = toDos.map((toDo) => {
+    //   if (toDo.id == id) {
+    //     const editedToDo = toDo;
+    //     editedToDo.completed = !toDo.completed;
+    //     return editedToDo;
+    //   }
+    //   return toDo;
+    // });
+    // setToDos(updatedToDos);
+    dispatch({ type: "TOGGLE_TODO", payload: id });
   };
 
   const deleteToDo = (id: number) => {
-    const updatedToDos = toDos.filter((toDo) => toDo.id !== id);
-    setToDos(updatedToDos);
+    // const updatedToDos = state.toDos.filter((toDo) => toDo.id !== id);
+    // setToDos(updatedToDos);
+    dispatch({ type: "DELETE_TODO", payload: id });
   };
 
   const handleKeyPress = (event: React.KeyboardEvent) => {
     if (event.key === "Enter") addToDo();
   };
-
-  const completedCount = toDos.filter((toDo) => toDo.completed).length;
-  const totalCount = toDos.length;
 
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-50 to-slate-100 p-10">
@@ -91,7 +95,7 @@ export const TasksApp = () => {
           </CardContent>
         </Card>
 
-        {totalCount > 0 && (
+        {state.toDosLength > 0 && (
           <Card className="mb-6 shadow-lg border-0 bg-white/80 backdrop-blur-sm">
             <CardHeader className="pb-3">
               <CardTitle className="text-lg font-semibold text-slate-700">
@@ -101,14 +105,21 @@ export const TasksApp = () => {
             <CardContent className="pt-0">
               <div className="flex items-center justify-between text-sm text-slate-600 mb-2">
                 <span>
-                  {completedCount} de {totalCount} completadas
+                  {state.doneToDosQuantity} de {state.toDosLength} completadas
                 </span>
-                <span>{Math.round((completedCount / totalCount) * 100)}%</span>
+                <span>
+                  {Math.round(
+                    (state.doneToDosQuantity / state.toDosLength) * 100,
+                  )}
+                  %
+                </span>
               </div>
               <div className="w-full bg-slate-200 rounded-full h-2">
                 <div
                   className="bg-linear-to-r from-green-400 to-green-500 h-2 rounded-full transition-all duration-300 ease-out"
-                  style={{ width: `${(completedCount / totalCount) * 100}%` }}
+                  style={{
+                    width: `${(state.doneToDosQuantity / state.toDosLength) * 100}%`,
+                  }}
                 />
               </div>
             </CardContent>
@@ -122,7 +133,7 @@ export const TasksApp = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {toDos.length === 0 ? (
+            {state.toDos.length === 0 ? (
               <div className="text-center py-12">
                 <div className="w-16 h-16 mx-auto mb-4 bg-slate-200 rounded-full flex items-center justify-center">
                   <Check className="w-8 h-8 text-slate-600" />
@@ -136,7 +147,7 @@ export const TasksApp = () => {
               </div>
             ) : (
               <div className="space-y-2">
-                {toDos.map((toDo) => (
+                {state.toDos.map((toDo) => (
                   <div
                     key={toDo.id}
                     className={`flex items-center gap-3 p-3 rounded-lg border transition-all duration-200 ${

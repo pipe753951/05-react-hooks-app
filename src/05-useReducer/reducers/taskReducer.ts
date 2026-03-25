@@ -11,6 +11,15 @@ interface TaskState {
   pendingToDosQuantity: number;
 }
 
+export const getTasksInitialState = (): TaskState => {
+  return {
+    toDos: [],
+    toDosLength: 0,
+    doneToDosQuantity: 0,
+    pendingToDosQuantity: 0,
+  };
+};
+
 export type TaskAction =
   | { type: "ADD_TODO"; payload: string }
   | { type: "DELETE_TODO"; payload: number }
@@ -29,12 +38,9 @@ export const taskReducer = function (
 
   switch (action.type) {
     case "ADD_TODO": {
-      const newToDoText = action.payload.trim();
-      if (!newToDoText) return state;
-
       const newToDo: ToDo = {
         id: Date.now(),
-        text: newToDoText,
+        text: action.payload,
         completed: false,
       };
 
@@ -67,8 +73,7 @@ export const taskReducer = function (
     case "TOGGLE_TODO": {
       const updatedToDos = state.toDos.map((toDo) => {
         if (toDo.id == action.payload) {
-          const editedToDo = toDo;
-          editedToDo.completed = !toDo.completed;
+          const editedToDo: ToDo = { ...toDo, completed: !toDo.completed };
           return editedToDo;
         }
         return toDo;
