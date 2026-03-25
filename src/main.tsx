@@ -10,12 +10,14 @@ import { createRoot } from "react-dom/client";
 // import { FocusScreen } from "./04-useRef/FocusScreen";
 
 // Part #02 - useReducer
-import { TasksApp } from "./05-useReducer/TaskApp";
+// import { TasksApp } from "./05-useReducer/TaskApp";
 
 import "./index.css";
+import { ScrambleWords } from "./05-useReducer/ScrambleWords";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <TasksApp />
+    {/* <TasksApp /> */}
+    <ScrambleWords />
   </StrictMode>,
 );
