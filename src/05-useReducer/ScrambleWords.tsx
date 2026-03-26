@@ -29,23 +29,6 @@ export const ScrambleWords = () => {
     words,
   } = state;
 
-  // const [words, setWords] = useState(shuffleArray(GAME_WORDS));
-
-  // const [currentWord, setCurrentWord] = useState(words[0]);
-  // const [scrambledWord, setScrambledWord] = useState(scrambleWord(currentWord));
-  // const [guess, setGuess] = useState("");
-  // const [points, setPoints] = useState(0);
-  // const [errorCounter, setErrorCounter] = useState(0);
-  // // const [maxAllowedErrors, setMaxAllowedErrors] = useState(3);
-  // const [maxAllowedErrors] = useState(3);
-
-  // const [skipCounter, setSkipCounter] = useState(0);
-  // // const [maxSkips, setMaxSkips] = useState(3);
-  // const [maxSkips] = useState(3);
-
-  // const [isGameOver, setIsGameOver] = useState(false);
-
-  // const handleGuessSubmit = (event: React.SubmitEvent) => {
   const handleGuessSubmit = (event: React.SubmitEvent) => {
     // Prevenir que la ventana se reinicie.
     event.preventDefault();
@@ -56,10 +39,12 @@ export const ScrambleWords = () => {
 
   const handleSkip = () => {
     console.log("Palabra saltada.");
+    dispatch({ type: "SKIP_WORD" });
   };
 
   const handlePlayAgain = () => {
     console.log("Jugar de nuevo.");
+    dispatch({ type: "RESTART_GAME", payload: getInitialState() });
   };
 
   //! Si ya no hay palabras para jugar, se muestra el mensaje de fin de juego
@@ -147,7 +132,6 @@ export const ScrambleWords = () => {
                     }
                     placeholder="Ingresa tu palabra..."
                     className="text-center text-lg font-semibold h-12 border-2 border-sky-200 focus:border-sky-500 transition-colors"
-                    maxLength={scrambledWord.length}
                     disabled={isGameOver}
                   />
                 </div>

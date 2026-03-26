@@ -6,6 +6,7 @@ export interface ScrambleWordsState {
   maxAllowedErrors: number;
   maxSkips: number;
   points: number;
+  // preEstablishedWords: string[];
   scrambledWord: string;
   skipCounter: number;
   totalWords: number;
@@ -14,7 +15,9 @@ export interface ScrambleWordsState {
 
 type ScrambleWordAction =
   | { type: "SET_GUESS"; payload: string }
-  | { type: "CHECK_ANSWER" };
+  | { type: "CHECK_ANSWER" }
+  | { type: "SKIP_WORD" }
+  | { type: "RESTART_GAME"; payload: ScrambleWordsState };
 
 const GAME_WORDS = [
   "EFÍMERA",
@@ -50,6 +53,8 @@ const scrambleWord = function (word: string = "") {
 };
 
 export const getInitialState = function (): ScrambleWordsState {
+  // const preEstablishedWords = [...GAME_WORDS];
+  // const shuffledWords = shuffleArray([...preEstablishedWords]);
   const shuffledWords = shuffleArray([...GAME_WORDS]);
 
   return {
@@ -60,9 +65,11 @@ export const getInitialState = function (): ScrambleWordsState {
     maxAllowedErrors: 3,
     maxSkips: 3,
     points: 0,
+    // preEstablishedWords: [...preEstablishedWords],
     scrambledWord: scrambleWord(shuffledWords[0]),
     skipCounter: 0,
-    totalWords: shuffledWords.length,
+    // totalWords: [...preEstablishedWords].length,
+    totalWords: [...GAME_WORDS].length,
     words: shuffledWords,
   };
 };
@@ -71,12 +78,34 @@ export function scrambleWordsReducer(
   state: ScrambleWordsState,
   action: ScrambleWordAction,
 ): ScrambleWordsState {
+  // /** Esta función mezcla el arreglo para que siempre sea aleatorio. */
+  // const shuffleArray = (array: string[]) => {
+  //   return array.sort(() => Math.random() - 0.5);
+  // };
+
   /** Esta función mezcla las letras de la palabra. */
-  const scrambleWord = function (word: string = "") {
+  const scrambleWord = (word: string = "") => {
     return word
       .split("")
       .sort(() => Math.random() - 0.5)
       .join("");
+  };
+
+  /** Esta función establece el índice de la nueva palabra al azar */
+  const removeWordFromWordList = (
+    wordToRemove: string,
+    words: string[],
+  ): string[] => {
+    const updatedWords = words.filter((word) => word !== wordToRemove);
+
+    return updatedWords;
+  };
+
+  /** Esta función establece el índice de la nueva palabra al azar */
+  const randomWordIndex = (words: string[]): number => {
+    const newWordIndex = Math.round(Math.random() * (words.length - 1));
+
+    return newWordIndex;
   };
 
   switch (action.type) {
@@ -99,13 +128,12 @@ export function scrambleWordsReducer(
       }
 
       const updatedPoints = state.points + 1;
-      const updatedWords = state.words.filter(
-        (word) => word !== state.currentWord,
+      const updatedWords = removeWordFromWordList(
+        state.currentWord,
+        state.words,
       );
 
-      const newWordIndex = Math.round(
-        Math.random() * (updatedWords.length - 1),
-      );
+      const newWordIndex = randomWordIndex(updatedWords);
 
       return {
         ...state,
@@ -117,7 +145,42 @@ export function scrambleWordsReducer(
       };
     }
 
-    default:
-      return state;
+    case "SKIP_WORD": {
+      if (state.skipCounter >= state.maxSkips) return state;
+
+      const updatedWords = removeWordFromWordList(
+        state.currentWord,
+        state.words,
+      );
+      const newWordIndex = randomWordIndex(updatedWords);
+
+      return {
+        ...state,
+        currentWord: updatedWords[newWordIndex],
+        guess: "",
+        scrambledWord: scrambleWord(updatedWords[newWordIndex]),
+        skipCounter: state.skipCounter + 1,
+        words: updatedWords,
+      };
+    }
+
+    // case "RESTART_GAME": {
+    //   const restartedWords = shuffleArray(state.preEstablishedWords);
+    //   const newWordIndex = randomWordIndex(restartedWords);
+
+    //   return {
+    //     ...state,
+    //     currentWord: restartedWords[newWordIndex],
+    //     errorCounter: 0,
+    //     guess: "",
+    //     isGameOver: false,
+    //     points: 0,
+    //     scrambledWord: scrambleWord(restartedWords[newWordIndex]),
+    //     skipCounter: 0,
+    //     words: restartedWords,
+    //   };
+    // }
+    case "RESTART_GAME":
+      return action.payload;
   }
 }
