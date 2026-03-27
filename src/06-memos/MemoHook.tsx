@@ -16,10 +16,16 @@ export const MemoHook = function () {
       <MySubtitle>{subtitle}</MySubtitle>
 
       <div className="flex gap-4">
-        <Button className="bg-blue-500 text-black focus:ring-blue-500 focus-visible:ring-blue-500">
+        <Button
+          onClick={() => setTitle("Otro título")}
+          className="bg-blue-500 text-black focus:ring-blue-500 focus-visible:ring-blue-500"
+        >
           Cambiar título
         </Button>
-        <Button className="bg-blue-500 text-black focus:ring-blue-500 focus-visible:ring-blue-500">
+        <Button
+          onClick={() => setSubtitle("Otro subtítulo")}
+          className="bg-blue-500 text-black focus:ring-blue-500 focus-visible:ring-blue-500"
+        >
           Cambiar subtítulo
         </Button>
       </div>

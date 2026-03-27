@@ -1,11 +1,14 @@
 import { Button } from "@/shared/components/Button";
+import React from "react";
 
 interface Props {
   children: string;
 }
 
-export const MySubtitle = function ({ children }: Props) {
+export const MySubtitle = React.memo(function ({ children }: Props) {
   console.log("MySubtitle re-render");
+
+  console.log("¡Tarea muy pesada!");
 
   return (
     <>
@@ -15,4 +18,4 @@ export const MySubtitle = function ({ children }: Props) {
       </Button>
     </>
   );
-};
+});
