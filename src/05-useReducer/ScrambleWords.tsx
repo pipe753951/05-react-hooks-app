@@ -1,11 +1,11 @@
-import React, { useReducer } from "react";
+import React, { useEffect, useReducer } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { SkipForward, Play } from "lucide-react";
 
-// import confetti from "canvas-confetti";
+import confetti from "canvas-confetti";
 
 import {
   getInitialState,
@@ -14,7 +14,6 @@ import {
 
 export const ScrambleWords = () => {
   const [state, dispatch] = useReducer(scrambleWordsReducer, getInitialState());
-
   const {
     currentWord,
     errorCounter,
@@ -28,6 +27,32 @@ export const ScrambleWords = () => {
     totalWords,
     words,
   } = state;
+
+  // const prevPoints = useRef(points);
+
+  // useEffect(() => {
+  //   console.log("Effect");
+
+  //   if (prevPoints.current + 1 !== points) return;
+
+  //   prevPoints.current = points;
+
+  //   confetti({
+  //     particleCount: 100,
+  //     spread: 120,
+  //     origin: { y: 0.6 },
+  //   });
+  // }, [points]);
+
+  useEffect(() => {
+    if (points === 0) return;
+
+    confetti({
+      particleCount: 100,
+      spread: 120,
+      origin: { y: 0.6 },
+    });
+  }, [points]);
 
   const handleGuessSubmit = (event: React.SubmitEvent) => {
     // Prevenir que la ventana se reinicie.
