@@ -11,13 +11,15 @@ import { createRoot } from "react-dom/client";
 
 // Part #02 - useReducer
 // import { TasksApp } from "./05-useReducer/TaskApp";
+// import { ScrambleWords } from "./05-useReducer/ScrambleWords";
+
+// Part #02 - memorizations and optimizations
+import { MemoHook } from "./06-memos/MemoHook";
 
 import "./index.css";
-import { ScrambleWords } from "./05-useReducer/ScrambleWords";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    {/* <TasksApp /> */}
-    <ScrambleWords />
+    <MemoHook />
   </StrictMode>,
 );
