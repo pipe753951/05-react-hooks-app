@@ -14,12 +14,13 @@ import { createRoot } from "react-dom/client";
 // import { ScrambleWords } from "./05-useReducer/ScrambleWords";
 
 // Part #02 - memorizations and optimizations
-import { MemoHook } from "./06-memos/MemoHook";
+// import { MemoHook } from "./06-memos/MemoHook";
 
 import "./index.css";
+import { MemoCounter } from "./06-memos/MemoCounter";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <MemoHook />
+    <MemoCounter />
   </StrictMode>,
 );
