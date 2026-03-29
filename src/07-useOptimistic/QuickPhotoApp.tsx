@@ -1,5 +1,5 @@
 import { SendHorizontal } from "lucide-react";
-import { useOptimistic, useState } from "react";
+import { useOptimistic, useRef, useState, useTransition } from "react";
 
 interface Comment {
   id: number;
@@ -8,21 +8,28 @@ interface Comment {
 }
 
 export const QuickPhotoApp = () => {
+  const [isPending, startTransition] = useTransition();
+
   const [comments, setComments] = useState<Comment[]>([
     { id: 1, text: "¡Gran foto!" },
     { id: 2, text: "Me encanta 🧡" },
   ]);
 
+  const lastOptimisticCommentId = useRef(2);
+
   const [optimisticComments, addOptimisticComment] = useOptimistic(
     comments,
-    (currentComments, newCommentText: string): Comment[] => [
-      ...currentComments,
-      {
-        id: comments.length + 1,
-        text: newCommentText,
-        optimistic: true,
-      },
-    ],
+    (currentComments, newCommentText: string): Comment[] => {
+      lastOptimisticCommentId.current++;
+      return [
+        ...currentComments,
+        {
+          id: lastOptimisticCommentId.current,
+          text: newCommentText,
+          optimistic: true,
+        },
+      ];
+    },
   );
 
   const handleAddComment = async (form: FormData) => {
@@ -31,17 +38,19 @@ export const QuickPhotoApp = () => {
 
     console.log(`Nuevo comentario: ${newMessageText}`);
 
-    addOptimisticComment(newMessageText.toString());
+    startTransition(async () => {
+      addOptimisticComment(newMessageText.toString());
 
-    // Simular la petición HTTP del servidor.
-    await new Promise((resolve) => setTimeout(resolve, 3000));
+      // Simular la petición HTTP del servidor.
+      await new Promise((resolve) => setTimeout(resolve, 3000));
 
-    const newComment: Comment = {
-      id: comments.length + 1,
-      text: newMessageText?.toString() ?? "Mensaje",
-    };
-    setComments((prevComments) => [...prevComments, newComment]);
-    console.log("Mensaje grabado.");
+      const newComment: Comment = {
+        id: Date.now(),
+        text: newMessageText?.toString() ?? "Mensaje",
+      };
+      setComments((prevComments) => [...prevComments, newComment]);
+      console.log("Mensaje grabado.");
+    });
   };
 
   return (
@@ -54,12 +63,12 @@ export const QuickPhotoApp = () => {
             alt="Instagrom"
             className="object-cover rounded-xl mb-4"
           />
-          <h1 className="text-black text-3xl font-bold mb-4">
+          <h1 className="text-black text-3xl font-bold">
             ¡Mira que interesante esta funcionalidad de la API de React!
           </h1>
         </div>
         {/* Comentarios */}
-        <ul className="flex flex-col items-start justify-center w-125 p-4">
+        <ul className="flex flex-col items-start justify-center w-125 px-4 py-8">
           {optimisticComments.map((comment) => (
             <li key={comment.id} className="flex items-center gap-2 mb-2">
               <div className="bg-radial-[at_0%_100%] from-blue-700 from-30% to-blue-500 rounded-full w-10 h-10 flex items-center justify-center">
@@ -86,8 +95,8 @@ export const QuickPhotoApp = () => {
           />
           <button
             type="submit"
-            disabled={false}
-            className="bg-blue-500 text-white p-2 shadow-md rounded-full cursor-pointer transition-shadow duration-300 ease-in-out outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white/80 focus:ring-blue-500 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white/80 focus-visible:ring-blue-500"
+            disabled={isPending}
+            className="bg-blue-500 text-white p-2 shadow-md rounded-full cursor-pointer transition-shadow duration-300 ease-in-out outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white/80 focus:ring-blue-500 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white/80 focus-visible:ring-blue-500 disabled:opacity-60 disabled:cursor-not-allowed"
           >
             <SendHorizontal />
           </button>
