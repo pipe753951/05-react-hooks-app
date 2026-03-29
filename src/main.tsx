@@ -15,12 +15,13 @@ import { createRoot } from "react-dom/client";
 
 // Part #02 - memorizations and optimizations
 // import { MemoHook } from "./06-memos/MemoHook";
+// import { MemoCounter } from "./06-memos/MemoCounter";
 
 import "./index.css";
-import { MemoCounter } from "./06-memos/MemoCounter";
+import { QuickPhotoApp } from "./07-useOptimistic/QuickPhotoApp";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <MemoCounter />
+    <QuickPhotoApp />
   </StrictMode>,
 );
