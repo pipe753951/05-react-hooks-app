@@ -1,5 +1,6 @@
-import { SendHorizontal } from "lucide-react";
 import { useOptimistic, useRef, useState, useTransition } from "react";
+import { toast } from "sonner";
+import { MessageCircleWarningIcon, SendHorizontal, X } from "lucide-react";
 
 interface Comment {
   id: number;
@@ -44,12 +45,32 @@ export const QuickPhotoApp = () => {
       // Simular la petición HTTP del servidor.
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
-      const newComment: Comment = {
-        id: Date.now(),
-        text: newMessageText?.toString() ?? "Mensaje",
-      };
-      setComments((prevComments) => [...prevComments, newComment]);
-      console.log("Mensaje grabado.");
+      // const newComment: Comment = {
+      //   id: Date.now(),
+      //   text: newMessageText?.toString() ?? "Mensaje",
+      // };
+      // setComments((prevComments) => [...prevComments, newComment]);
+      // console.log("Mensaje grabado.");
+
+      //* Este sería el código para revertir el proceso
+      setComments((prevComments) => prevComments);
+      toast.error("Hubo un error: no se pudo añadir tu comentario.", {
+        description: "Por favor, vuelve a intentar enviarlo.",
+        duration: 10000,
+        position: "top-right",
+        classNames: {
+          icon: "size-6!",
+        },
+        icon: <MessageCircleWarningIcon />,
+        action: (
+          <button
+            onClick={() => toast.dismiss()}
+            className="bg-red-500 text-white p-2 shadow-md rounded-full cursor-pointer transition-shadow duration-300 ease-in-out outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white/80 focus:ring-red-500 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white/80 focus-visible:ring-red-500 disabled:opacity-60 disabled:cursor-not-allowed"
+          >
+            <X size={20} />
+          </button>
+        ),
+      });
     });
   };
 
