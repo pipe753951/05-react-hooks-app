@@ -1,4 +1,4 @@
-import { StrictMode } from "react";
+import { StrictMode, Suspense } from "react";
 import { createRoot } from "react-dom/client";
 
 // import { Toaster } from "sonner";
@@ -20,12 +20,16 @@ import { createRoot } from "react-dom/client";
 // import { MemoCounter } from "./06-memos/MemoCounter";
 // import { QuickPhotoApp } from "./07-useOptimistic/QuickPhotoApp";
 
-import "./index.css";
 import { ClientInformation } from "./08-use-suspense/ClientInformation";
+import { getUserAction } from "./08-use-suspense/get-user.action";
+
+import "./index.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     {/* <Toaster richColors /> */}
-    <ClientInformation id={100} />
+    <Suspense fallback={<h1 className="h1">Cargando...</h1>}>
+      <ClientInformation getUser={getUserAction(1000)} />
+    </Suspense>
   </StrictMode>,
 );
