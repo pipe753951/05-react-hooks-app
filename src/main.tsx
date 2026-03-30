@@ -1,7 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
-import { Toaster } from "sonner";
+// import { Toaster } from "sonner";
 
 // Part #02 - introduction
 // import { HooksApp } from "./HooksApp";
@@ -18,13 +18,14 @@ import { Toaster } from "sonner";
 // Part #02 - memorizations and optimizations
 // import { MemoHook } from "./06-memos/MemoHook";
 // import { MemoCounter } from "./06-memos/MemoCounter";
+// import { QuickPhotoApp } from "./07-useOptimistic/QuickPhotoApp";
 
 import "./index.css";
-import { QuickPhotoApp } from "./07-useOptimistic/QuickPhotoApp";
+import { ClientInformation } from "./08-use-suspense/ClientInformation";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <Toaster richColors />
-    <QuickPhotoApp />
+    {/* <Toaster richColors /> */}
+    <ClientInformation id={100} />
   </StrictMode>,
 );
