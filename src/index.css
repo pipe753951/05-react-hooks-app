@@ -6,7 +6,11 @@
 @custom-variant dark (&:is(.dark *));
 
 .app-container {
-  @apply bg-radial-[at_50%_100%] from-blue-950 from-30% to-slate-900 min-h-screen flex items-center justify-center flex-col p-4 text-white;
+  @apply bg-radial-[at_50%_100%] from-blue-950 from-30% to-slate-900 min-h-screen flex items-center justify-center flex-col gap-4 p-4 text-white;
+}
+
+.h1 {
+  @apply text-5xl font-bold;
 }
 
 @theme inline {
