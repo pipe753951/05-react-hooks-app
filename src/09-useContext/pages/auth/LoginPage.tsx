@@ -20,6 +20,7 @@ export const LoginPage = function () {
     event.preventDefault();
 
     const result = login(+userId);
+    console.log({ result });
 
     if (!result) {
       toast.error("Usuario no encontrado", {
@@ -41,7 +42,6 @@ export const LoginPage = function () {
       return;
     }
 
-    console.log(result);
     navigate("/profile");
   };
 

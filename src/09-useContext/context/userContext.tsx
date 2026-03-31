@@ -18,6 +18,7 @@ export const UserContext = createContext({} as UserContextProps);
 export const UserContextProvider = function ({ children }: PropsWithChildren) {
   const [authStatus, setAuthStatus] = useState<AuthStatus>("checking");
   const [user, setUser] = useState<User | null>(null);
+  const [didContextProviderInit, setDidContextProviderInit] = useState(false);
 
   const handleLogin = (userId: number): boolean => {
     const userGoingToLogIn = users.find(
@@ -33,6 +34,7 @@ export const UserContextProvider = function ({ children }: PropsWithChildren) {
 
     setUser(userGoingToLogIn);
     setAuthStatus("authenticated");
+    localStorage.setItem("userID", userId.toString());
     return true;
   };
 
@@ -40,7 +42,19 @@ export const UserContextProvider = function ({ children }: PropsWithChildren) {
     console.log("Logout");
     setUser(null);
     setAuthStatus("not-authenticated");
+    localStorage.removeItem("userID");
   };
+
+  if (!didContextProviderInit) {
+    setDidContextProviderInit(true);
+    const storedUserId = localStorage.getItem("userID");
+    if (!storedUserId) {
+      handleLogout();
+      return;
+    }
+
+    handleLogin(+storedUserId);
+  }
 
   return (
     <UserContext
