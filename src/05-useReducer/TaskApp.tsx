@@ -174,7 +174,7 @@ export const TasksApp = () => {
                       {toDo.text}
                     </span>
                     <Button
-                      variant="ghost"
+                      variant="text"
                       size="sm"
                       onClick={() => deleteToDo(toDo.id)}
                       className="text-slate-400 hover:text-red-500 hover:bg-red-50 h-8 w-8 p-0"
