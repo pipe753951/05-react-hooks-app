@@ -1,4 +1,4 @@
-# #04. 📻 Contextos de React
+# #04. 📡 Contextos de React
 
 Los contextos de React son piezas que permiten proveer comportamientos y/o estados a múltiples componentes, sin tener que usar las _props_. Se crean con la función `createContext`, donde se indica como parámetro el contexto. En TypeScript, es posible añadirle un genérico a la función para especificar el tipo de contexto.
 
